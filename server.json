@@ -102,15 +102,6 @@
 						"0538"
 					]
 				}
-			},
-			"multiplex": {
-				"enabled": true,
-				"padding": false,
-				"brutal": {
-					"enabled": true,
-					"up_mbps": 2000,
-					"down_mbps": 500
-				}
 			}
 		}
 	],
