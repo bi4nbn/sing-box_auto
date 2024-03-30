@@ -79,11 +79,13 @@
 		},
 		{
 			"type": "vless",
+			"tag": "vless-in",
 			"sniff": true,
 			"listen": "::",
 			"listen_port": 2538,
 			"users": [
 				{
+					"name": "niteng",
 					"uuid": "nt0538",
 					"flow": "xtls-rprx-vision"
 				}
@@ -91,6 +93,10 @@
 			"tls": {
 				"enabled": true,
 				"server_name": "www.tesla.com",
+				"alpn": [
+					"h2",
+					"http/1.1"
+				],
 				"reality": {
 					"enabled": true,
 					"handshake": {
@@ -102,6 +108,10 @@
 						"0538"
 					]
 				}
+			},
+			"multiplex": {
+				"enabled": true,
+				"padding": true
 			}
 		}
 	],
