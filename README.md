@@ -15,5 +15,5 @@ vless://nt0538@你服务器ip:2538?encryption=none&flow=xtls-rprx-vision&securit
 
 # 客户端安装脚本
 ```
-bash -c "$(curl -kfsSlhttps://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/singbox_cient_install.sh)"
+bash -c "$(curl -kfsSl https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/singbox_cient_install.sh)"
 ```
