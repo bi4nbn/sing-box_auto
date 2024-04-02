@@ -41,7 +41,7 @@
 			}
 		],
 		"final": "cloudflare",
-		"strategy": "prefer_ipv4",
+		"strategy": "ipv4_only",
 		"disable_cache": false,
 		"disable_expire": false
 	},
@@ -108,10 +108,6 @@
 						"0538"
 					]
 				}
-			},
-			"multiplex": {
-				"enabled": true,
-				"padding": true
 			}
 		}
 	],
