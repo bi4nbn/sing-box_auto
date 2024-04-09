@@ -27,7 +27,7 @@ echo -e "${GREEN}完成创建目录和SSL证书.${NC}\n"
 success=0
 for i in {1..3}; do
   echo -e "${GREEN}运行安装脚本...${NC}"
-  bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/sing-box-yes/master/install.sh) install 1.9.0-rc.3 && { success=1; break; }
+  bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/sing-box-yes/master/install.sh) install 1.9.0-rc.6 && { success=1; break; }
   echo -e "${RED}下载失败，再试一次.${NC}"
 done
 
