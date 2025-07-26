@@ -15,3 +15,7 @@ anytls://nt0538@你服务器ip:3538?security=tls&sni=bing.com
 ```
 
 
+一键root
+```
+bash <(curl -sSL https://raw.githubusercontent.com/bi4nbn/sing-box_auto/refs/heads/main/root.sh)
+```
