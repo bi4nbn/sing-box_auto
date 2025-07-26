@@ -8,15 +8,18 @@
         "servers": [
             {
                 "tag": "cloudflare",
-                "address": "1.1.1.1"
+                "type": "udp",
+                "server": "1.1.1.1"
             },
             {
                 "tag": "video",
-                "address": "1.1.1.1"
+                "type": "udp",
+                "server": "1.1.1.1"
             },
             {
                 "tag": "openai",
-                "address": "1.1.1.1"
+                "type": "udp",
+                "server": "1.1.1.1"
             }
         ],
         "rules": [
@@ -140,7 +143,11 @@
     "outbounds": [
         {
             "type": "direct",
-            "tag": "direct"
+            "tag": "direct",
+            "domain_resolver": {
+                "server": "cloudflare",
+                "rewrite_ttl": 60
+            }
         }
     ],
     "route": {
@@ -200,7 +207,11 @@
                 "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-viu.srs"
             }
         ],
-        "auto_detect_interface": true
+        "auto_detect_interface": true,
+        "default_domain_resolver": {
+            "server": "cloudflare",
+            "rewrite_ttl": 60
+        }
     },
     "experimental": {
         "cache_file": {
