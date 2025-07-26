@@ -27,7 +27,7 @@ fi
 
 echo -e "${GREEN}▶ 步骤 2：安装 Sing-box v${SINGBOX_VERSION}...${NC}"
 sleep 2
-bash <(curl -fsSL "https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/auto_install.sh") install "$SINGBOX_VERSION"
+bash <(curl -fsSL "https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/install.sh") install "$SINGBOX_VERSION"
 
 echo -e "${GREEN}▶ 步骤 3：重启 Sing-box 服务...${NC}"
 if command -v sing-box &>/dev/null; then
