@@ -1,65 +1,78 @@
 #!/bin/bash
 
-set -e
+red(){
+    echo -e "\033[31m\033[01m$1\033[0m"
+}
 
-green(){ echo -e "\033[32m\033[01m$1\033[0m"; }
-red(){ echo -e "\033[31m\033[01m$1\033[0m"; }
+green(){
+    echo -e "\033[32m\033[01m$1\033[0m"
+}
 
-[[ $EUID -ne 0 ]] && SUDO='sudo' || SUDO=''
+yellow(){
+    echo -e "\033[33m\033[01m$1\033[0m"
+}
 
-# 设置 root 密码
-default_pass="Nihao0538"
-read -p "请输入 root 密码（默认: $default_pass）: " pass
-[[ -z "$pass" ]] && pass="$default_pass"
+REGEX=("debian" "ubuntu" "centos|red hat|kernel|oracle linux|alma|rocky" "'amazon linux'" "alpine")
+RELEASE=("Debian" "Ubuntu" "CentOS" "CentOS" "Alpine")
+PACKAGE_UPDATE=("apt -y update" "apt -y update" "yum -y update" "yum -y update" "apk update -f")
+PACKAGE_INSTALL=("apt -y install" "apt -y install" "yum -y install" "yum -y install" "apk add -f")
+CMD=("$(grep -i pretty_name /etc/os-release 2>/dev/null | cut -d \" -f2)" "$(hostnamectl 2>/dev/null | grep -i system | cut -d : -f2)" "$(lsb_release -sd 2>/dev/null)" "$(grep -i description /etc/lsb-release 2>/dev/null | cut -d \" -f2)" "$(grep . /etc/redhat-release 2>/dev/null)" "$(grep . /etc/issue 2>/dev/null | cut -d \\ -f1 | sed '/^[ ]*$/d')")
 
-green "▶ 设置 root 密码..."
-$SUDO passwd -u root 2>/dev/null || true
-echo "root:$pass" | $SUDO chpasswd
-green "✔ root 密码设置成功"
+for i in "${CMD[@]}"; do
+	SYS="$i" && [[ -n $SYS ]] && break
+done
 
-# 修改 SSH 配置
-sshd_conf="/etc/ssh/sshd_config"
+for ((int=0; int<${#REGEX[@]}; int++)); do
+	[[ $(echo "$SYS" | tr '[:upper:]' '[:lower:]') =~ ${REGEX[int]} ]] && SYSTEM="${RELEASE[int]}" && [[ -n $SYSTEM ]] && break
+done
 
-green "▶ 修改 SSH 配置，启用 root 密码登录..."
-$SUDO sed -i '/^PermitRootLogin/d' "$sshd_conf"
-$SUDO sed -i '/^PasswordAuthentication/d' "$sshd_conf"
-$SUDO sed -i '/^UsePAM/d' "$sshd_conf"
+[[ -z $SYSTEM ]] && red "脚本暂时不支持VPS的当前系统，请使用主流操作系统" && exit 1
+[[ ! -f /etc/ssh/sshd_config ]] && sudo ${PACKAGE_UPDATE[int]} && sudo ${PACKAGE_INSTALL[int]} openssh-server
+[[ -z $(type -P curl) ]] && sudo ${PACKAGE_UPDATE[int]} && sudo ${PACKAGE_INSTALL[int]} curl
 
-echo "PermitRootLogin yes" | $SUDO tee -a "$sshd_conf" >/dev/null
-echo "PasswordAuthentication yes" | $SUDO tee -a "$sshd_conf" >/dev/null
-echo "UsePAM yes" | $SUDO tee -a "$sshd_conf" >/dev/null
-green "✔ SSH 配置修改完成"
-
-# 兼容 cloud-init：修改 cloud.cfg
-cfg="/etc/cloud/cloud.cfg"
-if [[ -f $cfg ]]; then
-    green "▶ 配置 cloud-init，允许 root 密码登录..."
-    $SUDO sed -i '/^disable_root/d' $cfg
-    $SUDO sed -i '/^ssh_pwauth/d' $cfg
-    $SUDO sed -i '/^lock_passwd/d' $cfg
-    echo "disable_root: 0" | $SUDO tee -a $cfg >/dev/null
-    echo "ssh_pwauth: 1" | $SUDO tee -a $cfg >/dev/null
-    green "✔ cloud.cfg 修改完成"
-fi
-
-# 禁用 cloud-init 对 SSH 配置的干预（防止覆盖）
-green "▶ 禁用 cloud-init 的 SSH 模块（防止干扰）..."
-$SUDO touch /etc/cloud/cloud-init.disabled || true
-green "✔ 已禁用 cloud-init（永久生效）"
-
-# 重启 SSH 服务
-green "▶ 重启 SSH 服务..."
-if command -v systemctl >/dev/null; then
-    $SUDO systemctl restart ssh || $SUDO systemctl restart sshd
+WgcfIPv4Status=$(curl -s4m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
+WgcfIPv6Status=$(curl -s6m8 https://www.cloudflare.com/cdn-cgi/trace -k | grep warp | cut -d= -f2)
+if [[ $WgcfIPv4Status =~ "on"|"plus" ]] || [[ $WgcfIPv6Status =~ "on"|"plus" ]]; then
+    wg-quick down wgcf >/dev/null 2>&1
+    systemctl stop warp-go >/dev/null 2>&1
+    v6=$(curl -s6m8 api64.ipify.org -k)
+    v4=$(curl -s4m8 api64.ipify.org -k)
+    wg-quick up wgcf >/dev/null 2>&1
+    systemctl start warp-go >/dev/null 2>&1
 else
-    $SUDO service ssh restart || $SUDO service sshd restart
+    v6=$(curl -s6m8 api64.ipify.org -k)
+    v4=$(curl -s4m8 api64.ipify.org -k)
 fi
-green "✔ SSH 服务已重启"
 
-# 最终确认
-green "✅ 配置已完成！你现在可以使用如下账号登录："
-echo
-green "▶ 用户名：root"
-green "▶ 密码：$pass"
-echo
-green "▶ 请通过 ssh root@你的IP 测试连接。重启后仍然生效。"
+sudo lsattr /etc/passwd /etc/shadow >/dev/null 2>&1
+sudo chattr -i /etc/passwd /etc/shadow >/dev/null 2>&1
+sudo chattr -a /etc/passwd /etc/shadow >/dev/null 2>&1
+sudo lsattr /etc/passwd /etc/shadow >/dev/null 2>&1
+
+read -p "输入设置的root密码（默认为Nihao0538）：" password
+[[ -z $password ]] && yellow "密码未设置，将使用默认密码Nihao0538" && password="Nihao0538"
+echo root:$password | sudo chpasswd root
+
+sudo sed -i "s/^#\?PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config;
+sudo sed -i "s/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config;
+sudo sed -i 's/^#\?KbdInteractiveAuthentication.*/KbdInteractiveAuthentication yes/g' /etc/ssh/sshd_config
+
+sudo service ssh restart >/dev/null 2>&1 # 某些VPS系统的ssh服务名称为ssh，以防无法重启服务导致无法立刻使用密码登录
+sudo service sshd restart >/dev/null 2>&1
+
+yellow "VPS root登录信息设置完成！"
+if [[ -n $v4 && -z $v6 ]]; then
+    green "VPS登录IP地址为：$v4"
+fi
+if [[ -z $v4 && -n $v6 ]]; then
+    green "VPS登录IP地址为：$v6"
+fi
+if [[ -n $v4 && -n $v6 ]]; then
+    green "VPS登录IP地址为：$v4 或 $v6"
+fi
+green "用户名：root"
+green "密码：$password"
+yellow "请妥善保存好登录信息！然后重启VPS确保设置已保存！"
+
+
+
