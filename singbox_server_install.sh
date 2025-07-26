@@ -8,6 +8,27 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
 
+# 系统更新
+echo -e "${GREEN}▶ 步骤 0：更新系统...${NC}"
+
+# 检测包管理工具并执行更新
+if command -v apt &>/dev/null; then
+    echo -e "${GREEN}使用 apt 更新系统...${NC}"
+    apt update -y && apt upgrade -y
+elif command -v yum &>/dev/null; then
+    echo -e "${GREEN}使用 yum 更新系统...${NC}"
+    yum update -y
+elif command -v dnf &>/dev/null; then
+    echo -e "${GREEN}使用 dnf 更新系统...${NC}"
+    dnf update -y
+elif command -v pacman &>/dev/null; then
+    echo -e "${GREEN}使用 pacman 更新系统...${NC}"
+    pacman -Syu --noconfirm
+else
+    echo -e "${RED}无法识别的包管理工具，跳过更新步骤。${NC}"
+fi
+
+# 创建证书目录
 CERT_DIR="/etc/hysteria"
 CERT_KEY="$CERT_DIR/private.key"
 CERT_PEM="$CERT_DIR/cert.pem"
