@@ -2,7 +2,7 @@
 ```
 curl -sS https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/singbox_server_install.sh | bash
 ```
-# 10秒内自动安装以下三种协议的帐号,主打就是一个便捷
+# 10秒内自动安装以下三种协议
 
 ```
 anytls://nt0538@你服务器ip:3538?security=tls&sni=bing.com
