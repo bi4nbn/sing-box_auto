@@ -12,7 +12,7 @@ vless://nt0538@你服务器ip:2538?encryption=none&flow=xtls-rprx-vision&securit
 ```
 
 
-# 一键root
+# 一键开启服务器root权限
 ```
 bash <(curl -sSL https://raw.githubusercontent.com/bi4nbn/sing-box_auto/refs/heads/main/root.sh)
 ```
