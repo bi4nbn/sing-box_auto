@@ -1,6 +1,6 @@
 # 服务端一键安装脚本
 ```
-curl -sS https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/singbox_server_install.sh | bash
+bash <(curl -sSL https://raw.githubusercontent.com/bi4nbn/sing-box_auto/main/singbox_server_install.sh)
 ```
 # 10秒内自动安装以下三种协议
 
