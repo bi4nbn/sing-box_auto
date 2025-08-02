@@ -14,7 +14,7 @@ echo -e "${GREEN}▶ 步骤 0：更新系统...${NC}"
 # 检测包管理工具并执行更新
 if command -v apt &>/dev/null; then
     echo -e "${GREEN}使用 apt 更新系统...${NC}"
-    apt update -y && apt upgrade -y
+    apt update -y 
 elif command -v yum &>/dev/null; then
     echo -e "${GREEN}使用 yum 更新系统...${NC}"
     yum update -y
