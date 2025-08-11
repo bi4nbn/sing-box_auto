@@ -33,7 +33,7 @@ CERT_DIR="/etc/hysteria"
 CERT_KEY="$CERT_DIR/private.key"
 CERT_PEM="$CERT_DIR/cert.pem"
 DOMAIN="bing.com"
-SINGBOX_VERSION="1.12.0-rc.4"
+SINGBOX_VERSION="1.12.1"
 
 echo -e "${GREEN}▶ 步骤 1：创建自签证书（有效期100年）...${NC}"
 mkdir -p "$CERT_DIR"
