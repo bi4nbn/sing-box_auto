@@ -59,3 +59,7 @@ fi
 
 echo -e "${GREEN}▶ 步骤 4：打印实时日志（按 Ctrl+C 退出）...${NC}"
 sing-box log
+
+
+
+
