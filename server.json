@@ -54,21 +54,13 @@
             "tag": "hy2-in",
             "listen": "::",
             "listen_port": 1538,
-            "tcp_fast_open": true,
-            "tcp_multi_path": false,
-            "udp_fragment": true,
-            "udp_timeout": 300,
-            "sniff": true,
-            "sniff_override_destination": false,
-            "sniff_timeout": "300ms",
-            "up_mbps": 200,
-            "down_mbps": 200,
+            "up_mbps": 100,
+            "down_mbps": 100,
             "users": [
                 {
                     "password": "nt0538"
                 }
             ],
-            "ignore_client_bandwidth": false,
             "tls": {
                 "enabled": true,
                 "certificate_path": "/etc/hysteria/cert.pem",
@@ -76,9 +68,7 @@
                 "alpn": [
                     "h3"
                 ]
-            },
-            "masquerade": "https://bing.com",
-            "brutal_debug": false
+            }
         },
         {
             "type": "vless",
