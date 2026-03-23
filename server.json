@@ -1,0 +1,126 @@
+{
+    "log": {
+        "level": "info",
+        "output": "/usr/local/sing-box/sing-box.log",
+        "timestamp": true
+    },
+    "dns": {
+        "servers": [
+            {
+                "tag": "cloudflare",
+                "type": "udp",
+                "server": "1.1.1.1"
+            }
+        ],
+        "final": "cloudflare",
+        "strategy": "prefer_ipv4",
+        "disable_cache": false,
+        "disable_expire": false
+    },
+    "inbounds": [
+        {
+            "type": "hysteria2",
+            "tag": "hy2-in",
+            "listen": "::",
+            "listen_port": 1538,
+            "up_mbps": 100,
+            "down_mbps": 100,
+            "users": [
+                {
+                    "password": "nt0538"
+                }
+            ],
+            "tls": {
+                "enabled": true,
+                "certificate_path": "/etc/hysteria/cert.pem",
+                "key_path": "/etc/hysteria/private.key",
+                "alpn": [
+                    "h3"
+                ]
+            }
+        },
+        {
+            "type": "vless",
+            "tag": "vless-in",
+            "listen": "::",
+            "sniff_override_destination": true,
+            "listen_port": 2538,
+            "users": [
+                {
+                    "uuid": "nt0538",
+                    "flow": "xtls-rprx-vision"
+                }
+            ],
+            "tls": {
+                "enabled": true,
+                "server_name": "www.tesla.com",
+                "alpn": [
+                    "h2",
+                    "http/1.1"
+                ],
+                "reality": {
+                    "enabled": true,
+                    "handshake": {
+                        "server": "www.tesla.com",
+                        "server_port": 443
+                    },
+                    "private_key": "kPK8-OTeP2OmcLha67P476p-7V3-DHUxJ7EEMQ2vBWo",
+                    "short_id": [
+                        "0538"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "anytls",
+            "tag": "anytls-in",
+            "listen": "::",
+            "listen_port": 3538,
+            "users": [
+                {
+                    "name": "anytls-admin",
+                    "password": "nt0538"
+                }
+            ],
+            "padding_scheme": [
+                "stop=3",
+                "0=30-30",
+                "1=100-400",
+                "2=400-500,c,500-1000,c,500-1000,c,500-1000,c,500-1000"
+            ],
+            "tls": {
+                "enabled": true,
+                "certificate_path": "/etc/hysteria/cert.pem",
+                "key_path": "/etc/hysteria/private.key",
+                "alpn": [
+                    "h3"
+                ]
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "type": "direct",
+            "tag": "direct",
+            "domain_resolver": {
+                "server": "cloudflare",
+                "rewrite_ttl": 60
+            }
+        }
+    ],
+    "route": {
+        "auto_detect_interface": true,
+        "default_domain_resolver": {
+            "server": "cloudflare",
+            "rewrite_ttl": 60
+        }
+    },
+    "experimental": {
+        "cache_file": {
+            "enabled": true,
+            "path": "cache.db",
+            "cache_id": "mycacheid",
+            "store_fakeip": true
+        }
+    }
+}
