@@ -60,7 +60,7 @@
             "udp_timeout": 300,
             "sniff": true,
             "sniff_override_destination": false,
-            "sniff_timeout": "999ms",
+            "sniff_timeout": "300ms",
             "up_mbps": 200,
             "down_mbps": 200,
             "users": [
