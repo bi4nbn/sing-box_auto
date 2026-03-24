@@ -96,6 +96,27 @@
                     "h3"
                 ]
             }
+        },
+        {
+            "type": "tuic",
+            "tag": "tuic-in",
+            "listen": "::",
+            "listen_port": 4538,
+            "users": [
+                {
+                    "uuid": "d7b1c6b2-6f3a-4a9e-9b2e-8c6e9f5e1a2b"
+                }
+            ],
+            "congestion_control": "bbr",
+            "heartbeat": "10s",
+            "tls": {
+                "enabled": true,
+                "certificate_path": "/etc/hysteria/cert.pem",
+                "key_path": "/etc/hysteria/private.key",
+                "alpn": [
+                    "h3"
+                ]
+            }
         }
     ],
     "outbounds": [
