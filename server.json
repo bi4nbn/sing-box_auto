@@ -104,7 +104,8 @@
             "listen_port": 4538,
             "users": [
                 {
-                    "uuid": "d7b1c6b2-6f3a-4a9e-9b2e-8c6e9f5e1a2b"
+                    "uuid": "d7b1c6b2-6f3a-4a9e-9b2e-8c6e9f5e1a2b",
+                    "password": "nt0538"
                 }
             ],
             "congestion_control": "bbr",
