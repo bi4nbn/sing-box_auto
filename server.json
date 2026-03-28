@@ -126,19 +126,11 @@
     "outbounds": [
         {
             "type": "direct",
-            "tag": "direct",
-            "domain_resolver": {
-                "server": "cloudflare",
-                "rewrite_ttl": 60
-            }
+            "tag": "direct"
         }
     ],
     "route": {
-        "auto_detect_interface": true,
-        "default_domain_resolver": {
-            "server": "cloudflare",
-            "rewrite_ttl": 60
-        }
+        "auto_detect_interface": true
     },
     "experimental": {
         "cache_file": {
