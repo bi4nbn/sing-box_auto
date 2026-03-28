@@ -49,7 +49,6 @@
             "type": "vless",
             "tag": "vless-in",
             "listen": "::",
-            "sniff_override_destination": true,
             "listen_port": 2538,
             "users": [
                 {
