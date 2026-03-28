@@ -15,13 +15,11 @@
             {
                 "tag": "cloudflare",
                 "type": "udp",
-                "server": "1.1.1.1"
+                "server": "1.1.1.1",
+                "server_port": 53
             }
         ],
-        "final": "cloudflare",
-        "strategy": "prefer_ipv4",
-        "disable_cache": false,
-        "disable_expire": false
+        "final": "cloudflare"
     },
     "inbounds": [
         {
