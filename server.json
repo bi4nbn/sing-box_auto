@@ -116,16 +116,5 @@
                 ]
             }
         }
-    ],
-    "route": {
-        "auto_detect_interface": true
-    },
-    "experimental": {
-        "cache_file": {
-            "enabled": true,
-            "path": "cache.db",
-            "cache_id": "mycacheid",
-            "store_fakeip": true
-        }
-    }
+    ]
 }
