@@ -8,45 +8,14 @@
         "servers": [
             {
                 "tag": "cloudflare",
-                "type": "udp",
-                "server": "1.1.1.1"
-            },
-            {
-                "tag": "video",
-                "type": "udp",
-                "server": "1.1.1.1"
-            },
-            {
-                "tag": "openai",
-                "type": "udp",
-                "server": "1.1.1.1"
+                "type": "https",
+                "server": "1.1.1.1",
+                "server_port": 443,
+                "path": "/dns-query"
             }
         ],
-        "rules": [
-            {
-                "rule_set": [
-                    "geosite-netflix",
-                    "geosite-Disneyplus",
-                    "geosite-dazn",
-                    "geosite-tvb",
-                    "geosite-primevideo",
-                    "geosite-hbo",
-                    "geosite-now",
-                    "geosite-viu"
-                ],
-                "server": "video"
-            },
-            {
-                "rule_set": [
-                    "geosite-openai"
-                ],
-                "server": "openai"
-            }
-        ],
-        "final": "cloudflare",
         "strategy": "ipv4_only",
-        "disable_cache": false,
-        "disable_expire": false
+        "final": "cloudflare"
     },
     "inbounds": [
         {
@@ -74,7 +43,6 @@
             "type": "vless",
             "tag": "vless-in",
             "listen": "::",
-            "sniff_override_destination": true,
             "listen_port": 2538,
             "users": [
                 {
@@ -127,87 +95,28 @@
                     "h3"
                 ]
             }
-        }
-    ],
-    "outbounds": [
+        },
         {
-            "type": "direct",
-            "tag": "direct",
-            "domain_resolver": {
-                "server": "cloudflare",
-                "rewrite_ttl": 60
+            "type": "tuic",
+            "tag": "tuic-in",
+            "listen": "::",
+            "listen_port": 4538,
+            "users": [
+                {
+                    "uuid": "d7b1c6b2-6f3a-4a9e-9b2e-8c6e9f5e1a2b",
+                    "password": "nt0538"
+                }
+            ],
+            "congestion_control": "bbr",
+            "heartbeat": "10s",
+            "tls": {
+                "enabled": true,
+                "certificate_path": "/etc/hysteria/cert.pem",
+                "key_path": "/etc/hysteria/private.key",
+                "alpn": [
+                    "h3"
+                ]
             }
         }
-    ],
-    "route": {
-        "rule_set": [
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-netflix",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-netflix.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-openai",
-                "url": "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/category-ai-!cn.json"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-Disneyplus",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-disney.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-dazn",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-dazn.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-tvb",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-tvb.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-primevideo",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-primevideo.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-hbo",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-hbo.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-now",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-now.srs"
-            },
-            {
-                "type": "remote",
-                "format": "binary",
-                "tag": "geosite-viu",
-                "url": "https://github.com/SagerNet/sing-geosite/raw/rule-set/geosite-viu.srs"
-            }
-        ],
-        "auto_detect_interface": true,
-        "default_domain_resolver": {
-            "server": "cloudflare",
-            "rewrite_ttl": 60
-        }
-    },
-    "experimental": {
-        "cache_file": {
-            "enabled": true,
-            "path": "cache.db",
-            "cache_id": "mycacheid",
-            "store_fakeip": true
-        }
-    }
+    ]
 }
