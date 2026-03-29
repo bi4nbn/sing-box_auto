@@ -8,11 +8,13 @@
         "servers": [
             {
                 "tag": "cloudflare",
-                "type": "udp",
+                "type": "https",
                 "server": "1.1.1.1",
-                "server_port": 53
+                "server_port": 443,
+                "path": "/dns-query"
             }
         ],
+        "strategy": "ipv4_only",
         "final": "cloudflare"
     },
     "inbounds": [
